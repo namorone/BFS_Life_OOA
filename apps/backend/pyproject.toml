@@ -11,10 +11,11 @@ asyncpg = "*"
 alembic = "*"
 pydantic-settings = "^2.13.1"
 psycopg2-binary = "*"
+python-multipart = "^0.0.9"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
 
 [tool.ruff]
 line-length = 88
-select = ["E", "F", "I"]
+lint.select = ["E", "F", "I"]
