@@ -62,7 +62,7 @@ class ItemService:
         total_items = await self.item_repository.count_total_items()
         active_warranties = await self.item_repository.count_active_warranties(today)
         expiring_soon = await self.item_repository.count_expiring_soon(
-            today, settings.warranty_expiring_days
+            today, settings.WARRANTY_EXPIRING_DAYS
         )
         return DashboardStats(
             total_items=total_items,
