@@ -11,6 +11,9 @@ asyncpg = "*"
 alembic = "*"
 pydantic-settings = "^2.13.1"
 psycopg2-binary = "*"
+ruff = "*"
+pytest = "*"
+httpx = "*"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
