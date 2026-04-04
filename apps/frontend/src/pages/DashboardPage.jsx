@@ -16,6 +16,7 @@ export default function DashboardPage() {
   const [stats, setStats] = useState(defaultStats);
   const [categories, setCategories] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -109,7 +110,10 @@ export default function DashboardPage() {
             <button
               type="button"
               className="primary-button action-button"
-              onClick={() => setModalOpen(true)}
+              onClick={() => {
+                setModalKey((k) => k + 1);
+                setModalOpen(true);
+              }}
             >
               <span className="action-button-icon">+</span>
               <span>Add Item</span>
@@ -124,6 +128,7 @@ export default function DashboardPage() {
       </main>
 
       <AddItemModal
+        key={modalKey}
         open={modalOpen}
         categories={categories}
         saving={saving}

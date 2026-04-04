@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/ap
 RUN pip install poetry
 
 COPY pyproject.toml .
-RUN poetry config virtualenvs.create false && poetry install --no-root
+RUN poetry config virtualenvs.create false && poetry install --no-root --with dev
 
 COPY . .
 

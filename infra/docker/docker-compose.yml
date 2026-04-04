@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:16
@@ -25,24 +23,24 @@ services:
       context: ../../apps/backend
     container_name: bfs_backend
     environment:
-      - PYTHONPATH=/app
-    depends_on:
-      - db
+      PYTHONPATH: /app
     env_file:
       - ../../.env
+    depends_on:
+      - db
     volumes:
       - ../../apps/backend:/app
     ports:
       - "8000:8000"
-    command: >
-      sh -c "
-      until pg_isready -h db -p 5432 -U postgres -d bfs; do
-        echo 'Waiting for database...';
-        sleep 2;
-      done;
-      alembic upgrade head &&
-      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-      "
+    command:
+      - sh
+      - -c
+      - |
+        until pg_isready -h db -p 5432 -U postgres -d bfs; do
+          echo 'Waiting for database...'
+          sleep 2
+        done
+        alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
     build:

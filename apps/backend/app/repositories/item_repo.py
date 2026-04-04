@@ -18,29 +18,36 @@ class ItemRepository:
         await self.db.refresh(item)
         return item
 
-    async def get_with_relations(self, item_id: int) -> Item | None:
+    async def get_with_relations(self, item_id: int, user_id: int) -> Item | None:
         query = (
             select(Item)
             .options(joinedload(Item.category), joinedload(Item.warranty))
-            .where(Item.id == item_id)
+            .where(Item.id == item_id, Item.user_id == user_id)
         )
         result = await self.db.execute(query)
         return result.scalar_one_or_none()
 
-    async def count_total_items(self) -> int:
-        result = await self.db.execute(select(func.count(Item.id)))
-        return int(result.scalar_one() or 0)
-
-    async def count_active_warranties(self, today: date) -> int:
+    async def count_total_items(self, user_id: int) -> int:
         result = await self.db.execute(
-            select(func.count(Warranty.id)).where(Warranty.expiry_date >= today)
+            select(func.count(Item.id)).where(Item.user_id == user_id)
         )
         return int(result.scalar_one() or 0)
 
-    async def count_expiring_soon(self, today: date, days: int) -> int:
+    async def count_active_warranties(self, user_id: int, today: date) -> int:
+        result = await self.db.execute(
+            select(func.count(Warranty.id))
+            .join(Item, Warranty.item_id == Item.id)
+            .where(Item.user_id == user_id, Warranty.expiry_date >= today)
+        )
+        return int(result.scalar_one() or 0)
+
+    async def count_expiring_soon(self, user_id: int, today: date, days: int) -> int:
         deadline = today + timedelta(days=days)
         result = await self.db.execute(
-            select(func.count(Warranty.id)).where(
+            select(func.count(Warranty.id))
+            .join(Item, Warranty.item_id == Item.id)
+            .where(
+                Item.user_id == user_id,
                 Warranty.expiry_date >= today,
                 Warranty.expiry_date <= deadline,
             )

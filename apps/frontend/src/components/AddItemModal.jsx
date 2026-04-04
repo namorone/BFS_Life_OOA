@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 const initialForm = {
   name: "",
@@ -16,13 +16,6 @@ const initialForm = {
 export default function AddItemModal({ open, categories, onClose, onSave, saving }) {
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!open) {
-      setForm(initialForm);
-      setError("");
-    }
-  }, [open]);
 
   const selectedFileName = useMemo(() => form.photo?.name || "Upload Photo", [form.photo]);
 

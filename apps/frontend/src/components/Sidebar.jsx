@@ -6,16 +6,27 @@ import {
   Settings,
   User,
 } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
+
+import { useAuth } from "../hooks/useAuth";
 
 const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "/" },
-  { label: "Inventory", icon: Box, href: "/inventory" },
-  { label: "Notifications", icon: Bell, href: "/notifications" },
-  { label: "Profile", icon: User, href: "/profile" },
-  { label: "Settings", icon: Settings, href: "/settings" },
+  { label: "Dashboard", icon: LayoutDashboard, to: "/dashboard" },
+  { label: "Inventory", icon: Box, to: "/inventory" },
+  { label: "Notifications", icon: Bell, to: "/notifications" },
+  { label: "Profile", icon: User, to: "/profile" },
+  { label: "Settings", icon: Settings, to: "/settings" },
 ];
 
 export default function Sidebar() {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <aside className="sidebar">
       <div>
@@ -29,20 +40,22 @@ export default function Sidebar() {
             const Icon = item.icon;
 
             return (
-              <a
+              <NavLink
                 key={item.label}
-                href={item.href}
-                className={`sidebar-link ${item.href === "/" ? "active" : ""}`}
+                to={item.to}
+                className={({ isActive }) =>
+                  `sidebar-link ${isActive ? "active" : ""}`
+                }
               >
                 <Icon size={18} strokeWidth={2} />
                 <span>{item.label}</span>
-              </a>
+              </NavLink>
             );
           })}
         </nav>
       </div>
 
-      <button type="button" className="sidebar-logout">
+      <button type="button" className="sidebar-logout" onClick={handleLogout}>
         <LogOut size={18} strokeWidth={2} />
         <span>Logout</span>
       </button>
