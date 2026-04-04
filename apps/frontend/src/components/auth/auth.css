@@ -1,0 +1,214 @@
+/* Avoid double viewport height (html/#root + page) causing a stray vertical scroll */
+#root:has(.auth-page) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  min-height: 100svh;
+}
+
+body:has(.auth-page) {
+  overflow-x: hidden;
+}
+
+.auth-page {
+  --auth-primary: #355872;
+  --auth-bg: #f7f8f0;
+  --auth-text: #1a1a1a;
+  --auth-muted: #6b6b6b;
+  --auth-error: rgba(212, 24, 61, 0.9);
+  --auth-border: rgba(0, 0, 0, 0.1);
+  --auth-radius-card: 18px;
+  --auth-radius-control: 10px;
+
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100dvh;
+  min-height: 100svh;
+  padding: clamp(0.75rem, 3vw, 1.5rem);
+  padding-bottom: max(clamp(0.75rem, 3vw, 1.5rem), env(safe-area-inset-bottom, 0px));
+  background: var(--auth-bg);
+  font-family: "Inter", system-ui, sans-serif;
+  color: var(--auth-text);
+  box-sizing: border-box;
+}
+
+.auth-shell {
+  width: 100%;
+  max-width: 587px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(0.85rem, 2.5vw, 1.35rem);
+}
+
+.auth-brand {
+  text-align: center;
+}
+
+.auth-logo {
+  width: clamp(52px, 10vw, 72px);
+  height: clamp(52px, 10vw, 72px);
+  margin: 0 auto clamp(0.5rem, 2vw, 0.85rem);
+  border-radius: 50%;
+  background: var(--auth-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-logo-icon {
+  width: 42%;
+  height: 42%;
+}
+
+.auth-app-title {
+  margin: 0;
+  font-size: clamp(1.1rem, 3vw, 1.65rem);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--auth-primary);
+}
+
+.auth-app-subtitle {
+  margin: 0.35rem 0 0;
+  font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--auth-muted);
+}
+
+.auth-card {
+  background: #fff;
+  border-radius: var(--auth-radius-card);
+  border: 1px solid var(--auth-border);
+  padding: clamp(1rem, 3vw, 1.35rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.65rem, 2vw, 1rem);
+}
+
+.auth-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.auth-card-title {
+  margin: 0;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-weight: 500;
+  color: var(--auth-text);
+}
+
+.auth-card-desc {
+  margin: 0;
+  font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--auth-muted);
+}
+
+.auth-error {
+  padding: 0.55rem 0.85rem;
+  border-radius: 13px;
+  border: 1px solid var(--auth-border);
+  background: #fff;
+  color: var(--auth-error);
+  font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+  line-height: 1.45;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.65rem, 2vw, 0.95rem);
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.auth-label {
+  font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+  font-weight: 500;
+  color: var(--auth-text);
+}
+
+.auth-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.45rem 0.85rem;
+  min-height: 42px;
+  border: 1px solid var(--auth-border);
+  border-radius: var(--auth-radius-control);
+  font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+  font-weight: 400;
+  color: var(--auth-text);
+  background: #fff;
+  transition: border-color 0.15s ease;
+}
+
+.auth-input::placeholder {
+  color: var(--auth-muted);
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: rgba(53, 88, 114, 0.45);
+}
+
+.auth-submit {
+  width: 100%;
+  margin-top: 0.15rem;
+  padding: 0.5rem 0.85rem;
+  min-height: 42px;
+  border: none;
+  border-radius: var(--auth-radius-control);
+  background: var(--auth-primary);
+  color: #fff;
+  font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.05s ease;
+}
+
+.auth-submit:hover:not(:disabled) {
+  opacity: 0.94;
+}
+
+.auth-submit:active:not(:disabled) {
+  transform: scale(0.995);
+}
+
+.auth-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.auth-footer {
+  margin-top: 0.15rem;
+  text-align: center;
+  font-size: clamp(0.88rem, 2vw, 1.05rem);
+  line-height: 1.4;
+  color: var(--auth-muted);
+}
+
+.auth-link {
+  color: var(--auth-primary);
+  font-weight: 400;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
