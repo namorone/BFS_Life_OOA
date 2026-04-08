@@ -177,6 +177,19 @@ export default function SettingsPage() {
           </div>
         </section>
 
+	<section className="settings-card">
+	  <div className="card-header">
+	    <h3>Category Management</h3>
+	    <p>Organize your inventory with custom categories</p>
+	  </div>
+
+	  <div className="settings-actions">
+	    <a href="/categories">
+	      <button className="save-button">Manage Categories</button>
+	    </a>
+	  </div>
+	</section>
+
         <div className="settings-actions">
           <button className="save-button" onClick={handleSubmit}>
             Save Changes

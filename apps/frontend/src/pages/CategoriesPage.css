@@ -1,0 +1,184 @@
+.categories-page {
+  padding: 40px;
+  background: #f7f8f0;
+  min-height: 100vh;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.categories-header h2 {
+  margin: 8px 0 8px;
+  font-size: 32px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.categories-header p {
+  margin: 0 0 24px;
+  color: #6b6b6b;
+  font-size: 16px;
+}
+
+.back-link {
+  color: #355872;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.categories-card {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 18px;
+  padding: 24px;
+  max-width: 900px;
+}
+
+.categories-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.categories-card-top h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.categories-card-top p {
+  margin: 4px 0 0;
+  color: #6b6b6b;
+  font-size: 14px;
+}
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.category-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.category-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #f1f3f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-name {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.category-meta {
+  font-size: 13px;
+  color: #6b6b6b;
+  margin-top: 2px;
+}
+
+.category-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-button,
+.primary-button,
+.secondary-button,
+.danger-button {
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.icon-button {
+  background: transparent;
+  padding: 8px 10px;
+}
+
+.icon-button.delete {
+  color: #d64c4c;
+}
+
+.primary-button {
+  background: #355872;
+  color: white;
+  padding: 10px 16px;
+}
+
+.secondary-button {
+  background: #eeeeee;
+  color: #1a1a1a;
+  padding: 10px 16px;
+}
+
+.danger-button {
+  background: #e74c3c;
+  color: white;
+  padding: 10px 16px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  width: 420px;
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modal h3 {
+  margin: 0 0 8px;
+}
+
+.modal p {
+  margin: 0 0 18px;
+  color: #6b6b6b;
+  font-size: 14px;
+}
+
+.modal label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.modal input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
