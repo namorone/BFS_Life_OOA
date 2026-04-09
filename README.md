@@ -255,20 +255,26 @@ docker exec -it bfs_backend alembic upgrade head
 
 # 🧹 Linting
 
+З кореня репо (без локального Poetry / Node — усе в контейнерах):
+
+```
+make lint              # бек + фронт
+make lint-backend      # Ruff (check + format --check)
+make lint-frontend     # ESLint
+```
+
+Якщо вже піднятий `make run`, можна так:
+
 ## Backend (Ruff)
 
 Run:
 
 ```
-docker exec -it bfs_backend ruff check .
-docker exec -it bfs_backend ruff format .
+docker exec -it bfs_backend poetry run ruff check .
+docker exec -it bfs_backend poetry run ruff format .
 ```
 
----
-
 ## Frontend (ESLint)
-
-Run:
 
 ```
 docker exec -it bfs_frontend npm run lint
@@ -315,6 +321,16 @@ docker compose up --build
 ```
 docker compose build --no-cache
 ```
+
+## Backend tests (pytest у Docker)
+
+З кореня репо достатньо Docker. Команда сама підніме `db` (якщо не працює), дочекається Postgres, за потреби збере образ `backend` і запустить **одноразовий** контейнер з pytest (не треба окремо `make run`):
+
+```
+make test-backend
+```
+
+Використовується БД `bfs_test`; трафік на `db:5432` з asyncpg, як у проді.
 
 ## Enter backend container
 

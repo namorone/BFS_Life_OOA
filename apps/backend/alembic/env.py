@@ -1,14 +1,14 @@
-
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-
-from app.db.base import Base
-from app.db.models import *
 from app.core.config import settings
+from app.db.base import Base
+from app.db.models.category import Category  # noqa: F401
+from app.db.models.item import Item  # noqa: F401
+from app.db.models.user import User  # noqa: F401
+from app.db.models.warranty import Warranty  # noqa: F401
 
 # this is the Alembic Config object
 config = context.config

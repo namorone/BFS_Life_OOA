@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class Category(BaseModel):
+class CategoryRead(BaseModel):
     id: int
     name: str
 
