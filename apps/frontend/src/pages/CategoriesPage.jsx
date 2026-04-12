@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+import {
+  createCategory,
+  deleteCategory,
+  fetchCategories,
+  updateCategory,
+} from "../services/api";
 import "./CategoriesPage.css";
 
 export default function CategoriesPage() {
@@ -6,11 +12,18 @@ export default function CategoriesPage() {
   const [modalType, setModalType] = useState(null); // add | edit | delete | null
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState("");
 
-  const load = () => {
-    fetch("http://localhost:8000/api/v1/categories")
-      .then((r) => r.json())
-      .then(setCategories);
+  const load = async () => {
+    try {
+      const data = await fetchCategories();
+      setCategories(data);
+      setError("");
+    } catch (err) {
+      console.error("Failed to load categories:", err);
+      setCategories([]);
+      setError(err.message || "Failed to load categories");
+    }
   };
 
   useEffect(() => {
@@ -43,47 +56,53 @@ export default function CategoriesPage() {
   const handleAdd = async () => {
     if (!inputValue.trim()) return;
 
-    await fetch("http://localhost:8000/api/v1/categories", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: inputValue }),
-    });
-
-    closeModal();
-    load();
+    try {
+      await createCategory({ name: inputValue.trim() });
+      closeModal();
+      load();
+    } catch (err) {
+      console.error("Failed to create category:", err);
+      setError(err.message || "Failed to create category");
+    }
   };
 
   const handleEdit = async () => {
     if (!inputValue.trim() || !selectedCategory) return;
 
-    await fetch(`http://localhost:8000/api/v1/categories/${selectedCategory.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: inputValue }),
-    });
-
-    closeModal();
-    load();
+    try {
+      await updateCategory(selectedCategory.id, { name: inputValue.trim() });
+      closeModal();
+      load();
+    } catch (err) {
+      console.error("Failed to update category:", err);
+      setError(err.message || "Failed to update category");
+    }
   };
 
   const handleDelete = async () => {
     if (!selectedCategory) return;
 
-    await fetch(`http://localhost:8000/api/v1/categories/${selectedCategory.id}`, {
-      method: "DELETE",
-    });
-
-    closeModal();
-    load();
+    try {
+      await deleteCategory(selectedCategory.id);
+      closeModal();
+      load();
+    } catch (err) {
+      console.error("Failed to delete category:", err);
+      setError(err.message || "Failed to delete category");
+    }
   };
 
   return (
     <div className="categories-page">
       <div className="categories-header">
-        <a href="/settings" className="back-link">← Back to Settings</a>
+        <a href="/settings" className="back-link">
+          ← Back to Settings
+        </a>
         <h2>Manage Categories</h2>
         <p>Organize your inventory with custom categories</p>
       </div>
+
+      {error ? <div className="auth-error">{error}</div> : null}
 
       <div className="categories-card">
         <div className="categories-card-top">

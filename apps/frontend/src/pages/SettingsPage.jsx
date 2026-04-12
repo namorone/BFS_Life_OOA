@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+import Sidebar from "../components/Sidebar";
 import "./SettingsPage.css";
+import "../styles/dashboard.css";
 
 export default function SettingsPage() {
   const [form, setForm] = useState({
@@ -51,33 +55,17 @@ export default function SettingsPage() {
   if (loading) return <div className="settings-loading">Loading...</div>;
 
   return (
-    <div className="settings-layout">
-      <aside className="settings-sidebar">
-        <div className="sidebar-top">
-          <h1 className="sidebar-title">Home Inventory</h1>
-          <p className="sidebar-subtitle">Warranty Tracker</p>
-        </div>
+    <div className="dashboard-layout">
+      <Sidebar />
 
-        <nav className="sidebar-nav">
-          <a href="/" className="sidebar-link">Dashboard</a>
-          <a href="#" className="sidebar-link">Notifications</a>
-          <a href="#" className="sidebar-link">Profile</a>
-          <a href="/settings" className="sidebar-link active">Settings</a>
-        </nav>
-
-        <div className="sidebar-bottom">
-          <button className="logout-button">Logout</button>
-        </div>
-      </aside>
-
-      <main className="settings-main">
-        <div className="settings-header">
-          <h2>Settings</h2>
-          <p>Manage your application preferences</p>
+      <main className="dashboard-main">
+        <div className="settings-header-block">
+          <h1 className="settings-title">Settings</h1>
+          <p className="settings-subtitle">Manage your application preferences</p>
         </div>
 
         <section className="settings-card">
-          <div className="card-header">
+          <div className="settings-card-header">
             <h3>Notification Preferences</h3>
             <p>Configure how you receive notifications</p>
           </div>
@@ -89,6 +77,7 @@ export default function SettingsPage() {
                 Receive email updates about your inventory
               </div>
             </div>
+
             <label className="switch">
               <input
                 type="checkbox"
@@ -96,7 +85,7 @@ export default function SettingsPage() {
                 checked={form.notifications_enabled}
                 onChange={handleChange}
               />
-              <span className="slider"></span>
+              <span className="slider" />
             </label>
           </div>
 
@@ -107,6 +96,7 @@ export default function SettingsPage() {
                 Get notified when warranties are expiring
               </div>
             </div>
+
             <label className="switch">
               <input
                 type="checkbox"
@@ -114,38 +104,41 @@ export default function SettingsPage() {
                 checked={form.warranty_reminders_enabled}
                 onChange={handleChange}
               />
-              <span className="slider"></span>
+              <span className="slider" />
             </label>
           </div>
         </section>
 
         <section className="settings-card">
-          <div className="card-header">
+          <div className="settings-card-header">
             <h3>Account Settings</h3>
             <p>Manage your account security</p>
           </div>
 
-          <div className="form-group">
-            <label>Full Name</label>
+          <div className="settings-form-group">
+            <label htmlFor="full_name">Full Name</label>
             <input
+              id="full_name"
               name="full_name"
               value={form.full_name}
               onChange={handleChange}
             />
           </div>
 
-          <div className="form-group">
-            <label>Email</label>
+          <div className="settings-form-group">
+            <label htmlFor="email">Email</label>
             <input
+              id="email"
               name="email"
               value={form.email}
               onChange={handleChange}
             />
           </div>
 
-          <div className="form-group">
-            <label>Preferred Currency</label>
+          <div className="settings-form-group">
+            <label htmlFor="preferred_currency">Preferred Currency</label>
             <select
+              id="preferred_currency"
               name="preferred_currency"
               value={form.preferred_currency}
               onChange={handleChange}
@@ -158,7 +151,7 @@ export default function SettingsPage() {
         </section>
 
         <section className="settings-card">
-          <div className="card-header">
+          <div className="settings-card-header">
             <h3>Appearance</h3>
             <p>Customize how the app looks</p>
           </div>
@@ -170,28 +163,29 @@ export default function SettingsPage() {
                 Toggle dark mode theme
               </div>
             </div>
+
             <label className="switch disabled-switch">
               <input type="checkbox" disabled />
-              <span className="slider"></span>
+              <span className="slider" />
             </label>
           </div>
         </section>
 
-	<section className="settings-card">
-	  <div className="card-header">
-	    <h3>Category Management</h3>
-	    <p>Organize your inventory with custom categories</p>
-	  </div>
+        <section className="settings-card">
+          <div className="settings-card-header">
+            <h3>Category Management</h3>
+            <p>Organize your inventory with custom categories</p>
+          </div>
 
-	  <div className="settings-actions">
-	    <a href="/categories">
-	      <button className="save-button">Manage Categories</button>
-	    </a>
-	  </div>
-	</section>
+          <div className="settings-card-actions">
+            <Link to="/categories" className="settings-link-button">
+              Manage Categories
+            </Link>
+          </div>
+        </section>
 
-        <div className="settings-actions">
-          <button className="save-button" onClick={handleSubmit}>
+        <div className="settings-page-actions">
+          <button className="primary-button" onClick={handleSubmit}>
             Save Changes
           </button>
         </div>
