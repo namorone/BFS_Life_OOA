@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const initialForm = {
   name: "",
@@ -17,14 +17,25 @@ export default function AddItemModal({ open, categories, onClose, onSave, saving
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState("");
 
-  const selectedFileName = useMemo(() => form.photo?.name || "Upload Photo", [form.photo]);
+  const selectedFileName = useMemo(
+    () => form.photo?.name || "Upload Photo",
+    [form.photo]
+  );
+
+  useEffect(() => {
+    if (open) {
+      setError("");
+    }
+  }, [open]);
 
   if (!open) {
     return null;
   }
 
   const updateField = (field) => (event) => {
-    const value = field === "photo" ? event.target.files?.[0] || null : event.target.value;
+    const value =
+      field === "photo" ? event.target.files?.[0] || null : event.target.value;
+
     setForm((current) => ({ ...current, [field]: value }));
   };
 
@@ -32,10 +43,16 @@ export default function AddItemModal({ open, categories, onClose, onSave, saving
     setForm((current) => ({
       ...current,
       hasWarranty: !current.hasWarranty,
-      warrantyProvider: !current.hasWarranty ? current.warrantyProvider : "",
-      warrantyExpiryDate: !current.hasWarranty ? current.warrantyExpiryDate : "",
-      warrantyNotes: !current.hasWarranty ? current.warrantyNotes : "",
+      warrantyProvider: current.hasWarranty ? "" : current.warrantyProvider,
+      warrantyExpiryDate: current.hasWarranty ? "" : current.warrantyExpiryDate,
+      warrantyNotes: current.hasWarranty ? "" : current.warrantyNotes,
     }));
+  };
+
+  const handleClose = () => {
+    setForm(initialForm);
+    setError("");
+    onClose();
   };
 
   const handleSubmit = async (event) => {
@@ -54,7 +71,7 @@ export default function AddItemModal({ open, categories, onClose, onSave, saving
 
     try {
       await onSave(form);
-      onClose();
+      setForm(initialForm);
     } catch (submitError) {
       setError(submitError.message || "Failed to save item.");
     }
@@ -63,25 +80,25 @@ export default function AddItemModal({ open, categories, onClose, onSave, saving
   return (
     <div className="modal-overlay" role="presentation">
       <div className="modal-card">
-        <button type="button" className="modal-close" onClick={onClose}>
+        <button type="button" className="modal-close" onClick={handleClose}>
           ×
         </button>
 
-        <h2>Add New Item</h2>
+        <h2 className="modal-title">Add New Item</h2>
 
         <form className="item-form" onSubmit={handleSubmit}>
-          <label>
-            <span>Photo</span>
+          <label className="form-field">
+            <span className="form-label">Photo</span>
             <div className="upload-row">
-              <label className="upload-button">
+              <label className="upload-button action-like-button">
                 <input type="file" accept="image/*" onChange={updateField("photo")} hidden />
                 {selectedFileName}
               </label>
             </div>
           </label>
 
-          <label>
-            <span>Inventory Name</span>
+          <label className="form-field">
+            <span className="form-label">Inventory Name</span>
             <input
               type="text"
               placeholder="New Inventory Name"
@@ -90,9 +107,13 @@ export default function AddItemModal({ open, categories, onClose, onSave, saving
             />
           </label>
 
-          <label>
-            <span>Category</span>
-            <select value={form.categoryId} onChange={updateField("categoryId")}>
+          <label className="form-field">
+            <span className="form-label">Category</span>
+            <select
+              value={form.categoryId}
+              onChange={updateField("categoryId")}
+              className={!form.categoryId ? "is-placeholder" : ""}
+            >
               <option value="">Select Category</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
@@ -102,13 +123,18 @@ export default function AddItemModal({ open, categories, onClose, onSave, saving
             </select>
           </label>
 
-          <label>
-            <span>Purchase Date</span>
-            <input type="date" value={form.purchaseDate} onChange={updateField("purchaseDate")} />
+          <label className="form-field">
+            <span className="form-label">Purchase Date</span>
+            <input
+              type="date"
+              value={form.purchaseDate}
+              onChange={updateField("purchaseDate")}
+              className={!form.purchaseDate ? "is-placeholder date-empty" : ""}
+            />
           </label>
 
-          <label>
-            <span>Purchase Price</span>
+          <label className="form-field">
+            <span className="form-label">Purchase Price</span>
             <input
               type="number"
               min="0"
@@ -119,8 +145,8 @@ export default function AddItemModal({ open, categories, onClose, onSave, saving
             />
           </label>
 
-          <label>
-            <span>Description</span>
+          <label className="form-field">
+            <span className="form-label">Description</span>
             <textarea
               placeholder="Item Description"
               value={form.description}
@@ -129,14 +155,18 @@ export default function AddItemModal({ open, categories, onClose, onSave, saving
             />
           </label>
 
-          <button type="button" className="secondary-action" onClick={toggleWarranty}>
+          <button
+            type="button"
+            className="secondary-action action-like-button"
+            onClick={toggleWarranty}
+          >
             {form.hasWarranty ? "Remove Warranty" : "Add Warranty"}
           </button>
 
           {form.hasWarranty ? (
             <div className="warranty-box">
-              <label>
-                <span>Warranty Provider</span>
+              <label className="form-field">
+                <span className="form-label">Warranty Provider</span>
                 <input
                   type="text"
                   placeholder="Store / manufacturer"
@@ -145,17 +175,18 @@ export default function AddItemModal({ open, categories, onClose, onSave, saving
                 />
               </label>
 
-              <label>
-                <span>Warranty Expiry Date</span>
+              <label className="form-field">
+                <span className="form-label">Warranty Expiry Date</span>
                 <input
                   type="date"
                   value={form.warrantyExpiryDate}
                   onChange={updateField("warrantyExpiryDate")}
+                  className={!form.warrantyExpiryDate ? "is-placeholder date-empty" : ""}
                 />
               </label>
 
-              <label>
-                <span>Warranty Notes</span>
+              <label className="form-field">
+                <span className="form-label">Warranty Notes</span>
                 <textarea
                   rows={2}
                   placeholder="Warranty notes"
@@ -169,7 +200,7 @@ export default function AddItemModal({ open, categories, onClose, onSave, saving
           {error ? <p className="form-error">{error}</p> : null}
 
           <div className="modal-actions">
-            <button type="button" className="ghost-button" onClick={onClose}>
+            <button type="button" className="ghost-button" onClick={handleClose}>
               Cancel
             </button>
             <button type="submit" className="primary-button" disabled={saving}>

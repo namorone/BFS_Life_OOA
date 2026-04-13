@@ -346,3 +346,76 @@
     grid-template-columns: 1fr;
   }
 }
+
+.toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 2000;
+  min-width: 320px;
+  max-width: 420px;
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
+  animation: toast-slide-in 0.25s ease;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+}
+
+.toast-message {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.toast-close {
+  border: none;
+  background: transparent;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.75;
+}
+
+.toast-close:hover {
+  opacity: 1;
+}
+
+.toast-success {
+  background: #ebf8ee;
+  color: #1e6b35;
+  border: 1px solid #b7e4c1;
+}
+
+.toast-error {
+  background: #fde8e8;
+  color: #9d2626;
+  border: 1px solid #f5bcbc;
+}
+
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .toast {
+    right: 16px;
+    left: 16px;
+    bottom: 16px;
+    min-width: auto;
+    max-width: none;
+  }
+}
