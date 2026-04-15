@@ -1,6 +1,9 @@
 COMPOSE := infra/docker/docker-compose.yml
+VERSION := $(shell cat VERSION)
 
-.PHONY: run down build-nocache lint lint-backend lint-frontend test-backend
+.PHONY: run down build-nocache lint lint-backend lint-frontend test-backend \
+	version-patch version-minor version-major tag-version \
+	release-patch release-minor release-major
 
 down:
 	docker compose -f $(COMPOSE) down
@@ -27,3 +30,22 @@ lint-frontend:
 	docker compose -f $(COMPOSE) run --rm --build --no-deps frontend sh -lc "npm run lint"
 
 lint: lint-backend lint-frontend
+
+version-patch:
+	python3 scripts/bump_version.py patch
+
+version-minor:
+	python3 scripts/bump_version.py minor
+
+version-major:
+	python3 scripts/bump_version.py major
+
+tag-version:
+	git tag "v$(VERSION)"
+	@echo "Created tag v$(VERSION)"
+
+release-patch: version-patch tag-version
+
+release-minor: version-minor tag-version
+
+release-major: version-major tag-version
