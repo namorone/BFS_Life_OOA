@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 from app.schemas.user import UserSettingsResponse, UserSettingsUpdate
 
 router = APIRouter(prefix="/settings", tags=["settings"])

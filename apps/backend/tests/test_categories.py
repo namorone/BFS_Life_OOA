@@ -117,10 +117,7 @@ def test_update_category_persists():
     response = client.get("/api/v1/categories", headers=headers)
     data = response.json()
 
-    assert any(
-        c["id"] == created["id"] and c["name"] == "After Update"
-        for c in data
-    )
+    assert any(c["id"] == created["id"] and c["name"] == "After Update" for c in data)
 
 
 def test_update_non_existing_category_returns_404():
@@ -198,6 +195,7 @@ def test_create_category_empty_name():
 
     assert response.status_code == 200
     assert response.json()["name"] == ""
+
 
 def test_category_ids_are_unique():
     headers = auth_headers()
