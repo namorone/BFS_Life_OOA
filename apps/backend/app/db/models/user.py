@@ -11,8 +11,20 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
-    notifications_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    warranty_reminders_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    preferred_currency: Mapped[str] = mapped_column(String(255), nullable=False, default="USD")
+    notifications_enabled: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+    )
+    warranty_reminders_enabled: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+    )
+    preferred_currency: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+        default="USD",
+    )
 
     items = relationship("Item", back_populates="owner")

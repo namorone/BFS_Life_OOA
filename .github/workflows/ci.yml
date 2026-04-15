@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Frontend build, lint, tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare CI env file
+        run: |
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          else
+            touch .env
+          fi
+
+      - name: Run frontend lint via Makefile
+        run: make ci-frontend-lint
+
+      - name: Run frontend tests via Makefile
+        run: make ci-frontend-test
+
+      - name: Build frontend via Makefile
+        run: make ci-frontend-build
+
+      - name: Upload frontend reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-reports
+          path: |
+            apps/frontend/reports
+            apps/frontend/coverage
+          if-no-files-found: warn
+
+      - name: Upload frontend build artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: apps/frontend/dist
+          if-no-files-found: warn
+
+  backend:
+    name: Backend lint, unit, integration, coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare CI env file
+        run: |
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          else
+            touch .env
+          fi
+
+      - name: Run backend lint via Makefile
+        run: make ci-backend-lint
+
+      - name: Run backend tests via Makefile
+        run: make ci-backend-test
+
+      - name: Upload backend reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-reports
+          path: apps/backend/reports
+          if-no-files-found: warn
+
+      - name: Shutdown docker compose services
+        if: always()
+        continue-on-error: true
+        run: make down
