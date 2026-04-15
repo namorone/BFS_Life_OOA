@@ -15,41 +15,21 @@ jobs:
   frontend:
     name: Frontend build, lint, tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/frontend
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: apps/frontend/package-lock.json
+      - name: Run frontend lint via Makefile
+        run: make ci-frontend-lint
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Run frontend tests via Makefile
+        run: make ci-frontend-test
 
-      - name: Prepare report directories
-        run: mkdir -p reports
-
-      - name: Lint frontend (ESLint JSON report)
-        run: npx eslint . -f json -o reports/eslint-report.json
-
-      - name: Run frontend tests with coverage
-        run: npm run test:coverage -- --coverage.reporter=text --coverage.reporter=lcov --coverage.reporter=json-summary
-
-      - name: Build frontend
-        run: npm run build
-
-      - name: Generate frontend build report
-        run: |
-          du -sh dist > reports/build-size.txt
-          ls -la dist > reports/build-files.txt
+      - name: Build frontend via Makefile
+        run: make ci-frontend-build
 
       - name: Upload frontend reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: frontend-reports
@@ -59,84 +39,35 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload frontend build artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
           path: apps/frontend/dist
-          if-no-files-found: error
+          if-no-files-found: warn
 
   backend:
     name: Backend lint, unit, integration, coverage
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/backend
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: bfs_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U postgres -d bfs_test"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-    env:
-      TEST_DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bfs_test
-      TEST_DATABASE_URL_SYNC: postgresql://postgres:postgres@localhost:5432/bfs_test
-      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bfs_test
-      DATABASE_URL_SYNC: postgresql://postgres:postgres@localhost:5432/bfs_test
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: pip
+      - name: Run backend lint via Makefile
+        run: make ci-backend-lint
 
-      - name: Install Poetry
-        run: pip install poetry
-
-      - name: Synchronize Poetry lock file
-        run: poetry lock --no-interaction
-
-      - name: Install backend dependencies
-        run: poetry install --no-interaction --no-ansi --no-root
-
-      - name: Install coverage tool
-        run: poetry run python -m pip install coverage
-
-      - name: Prepare report directories
-        run: mkdir -p reports
-
-      - name: Lint backend (Ruff JSON report)
-        run: poetry run ruff check . --output-format=json > reports/ruff-report.json
-
-      - name: Check backend formatting
-        run: poetry run ruff format --check .
-
-      - name: Run unit tests
-        run: poetry run coverage run -m pytest tests/unit -q --junitxml=reports/junit-unit.xml
-
-      - name: Run integration tests
-        run: poetry run coverage run -a -m pytest tests/integration -q --junitxml=reports/junit-integration.xml
-
-      - name: Build backend coverage reports
-        run: |
-          poetry run coverage report -m > reports/coverage-summary.txt
-          poetry run coverage xml -o reports/coverage.xml
-          poetry run coverage html -d reports/coverage-html
+      - name: Run backend tests via Makefile
+        run: make ci-backend-test
 
       - name: Upload backend reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: backend-reports
           path: apps/backend/reports
-          if-no-files-found: error
+          if-no-files-found: warn
+
+      - name: Shutdown docker compose services
+        if: always()
+        run: make down

@@ -361,6 +361,14 @@ Pipeline includes:
 * backend coverage reports (`coverage xml/html`)
 * build/test/lint reports uploaded as workflow artifacts
 
+CI runs through Makefile targets (single source of truth):
+
+* `make ci-frontend-lint`
+* `make ci-frontend-test`
+* `make ci-frontend-build`
+* `make ci-backend-lint`
+* `make ci-backend-test`
+
 Main workflow file:
 
 ```
