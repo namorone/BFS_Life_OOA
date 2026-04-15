@@ -19,6 +19,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Prepare CI env file
+        run: |
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          else
+            touch .env
+          fi
+
       - name: Run frontend lint via Makefile
         run: make ci-frontend-lint
 
@@ -54,6 +62,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Prepare CI env file
+        run: |
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          else
+            touch .env
+          fi
+
       - name: Run backend lint via Makefile
         run: make ci-backend-lint
 
@@ -70,4 +86,5 @@ jobs:
 
       - name: Shutdown docker compose services
         if: always()
+        continue-on-error: true
         run: make down
