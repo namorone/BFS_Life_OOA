@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:16
+    container_name: bfs_db_prod
+    environment:
+      POSTGRES_DB: bfs_prod
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - bfs_prod_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bfs_prod"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: ${BACKEND_IMAGE:-ghcr.io/OWNER/REPO/backend:latest}
+    container_name: bfs_backend_prod
+    env_file:
+      - ../../.env.production
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    image: ${FRONTEND_IMAGE:-ghcr.io/OWNER/REPO/frontend:latest}
+    container_name: bfs_frontend_prod
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  bfs_prod_data:
