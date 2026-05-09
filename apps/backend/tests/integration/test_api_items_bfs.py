@@ -4,6 +4,7 @@ import pytest
 from httpx import AsyncClient
 
 from tests.conftest import make_payload
+from datetime import date, timedelta
 
 
 @pytest.mark.asyncio
@@ -170,6 +171,8 @@ async def test_bfs_api_items_create_updates_dashboard_counts(
     auth_headers: dict[str, str],
     electronics_category,
 ) -> None:
+    expiry_date = (date.today() + timedelta(days=10)).isoformat()
+
     create_resp = await async_client.post(
         "/api/v1/items",
         headers=auth_headers,
@@ -178,7 +181,7 @@ async def test_bfs_api_items_create_updates_dashboard_counts(
                 category_id=electronics_category.id,
                 warranty={
                     "provider": "Store",
-                    "expiry_date": "2026-04-20",
+                    "expiry_date": expiry_date,
                     "notes": "Within expiring window",
                 },
             )
