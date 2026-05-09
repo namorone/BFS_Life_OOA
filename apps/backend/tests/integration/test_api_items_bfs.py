@@ -1,10 +1,10 @@
+from datetime import date, timedelta
 from io import BytesIO
 
 import pytest
 from httpx import AsyncClient
 
 from tests.conftest import make_payload
-from datetime import date, timedelta
 
 
 @pytest.mark.asyncio
