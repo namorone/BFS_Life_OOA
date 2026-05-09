@@ -456,3 +456,33 @@ git push --tags
 # 👨‍💻 Authors
 
 Team BFS Life
+
+
+* * *
+#  CD Pipeline
+
+Continuous Deployment is configured in:
+
+    .github/workflows/cd.yml
+
+CD extends the existing CI setup by building Docker images, publishing them to GitHub Container Registry (GHCR), and optionally deploying them through SSH-based staging/production jobs.
+
+Deployment rules:
+
+  * push to `dev` → staging Docker images (`staging`, `staging-<short-sha>`)
+  * tag `vX.Y.Z` → production Docker images (`vX.Y.Z`, `latest`)
+
+Published images:
+
+    ghcr.io/namorone/bfs-life-backend
+    ghcr.io/namorone/bfs-life-frontend
+
+Deployment compose files:
+
+    infra/docker/docker-compose.staging.yml
+    infra/docker/docker-compose.production.yml
+
+Full CD documentation:
+
+    Docs/CD_PIPELINE.md
+
