@@ -132,8 +132,14 @@ jobs:
             cd ${{ vars.STAGING_APP_DIR || '~/BFS_Life_OOA' }}
             export BACKEND_IMAGE=${{ needs.build-and-push.outputs.backend_image }}:staging
             export FRONTEND_IMAGE=${{ needs.build-and-push.outputs.frontend_image }}:staging
-            docker compose -f infra/docker/docker-compose.staging.yml pull
-            docker compose -f infra/docker/docker-compose.staging.yml up -d --remove-orphans
+            docker compose \
+              --env-file .env \
+              -f infra/docker/docker-compose.staging.yml \
+              pull
+            docker compose \
+              --env-file .env \
+              -f infra/docker/docker-compose.staging.yml \
+              up -d --remove-orphans
             docker image prune -f
 
   deploy-production:
@@ -155,6 +161,12 @@ jobs:
             cd ${{ vars.PRODUCTION_APP_DIR || '~/BFS_Life_OOA' }}
             export BACKEND_IMAGE=${{ needs.build-and-push.outputs.backend_image }}:${{ needs.build-and-push.outputs.image_version }}
             export FRONTEND_IMAGE=${{ needs.build-and-push.outputs.frontend_image }}:${{ needs.build-and-push.outputs.image_version }}
-            docker compose -f infra/docker/docker-compose.production.yml pull
-            docker compose -f infra/docker/docker-compose.production.yml up -d --remove-orphans
+            docker compose \
+              --env-file .env \
+              -f infra/docker/docker-compose.production.yml \
+              pull
+            docker compose \
+              --env-file .env \
+              -f infra/docker/docker-compose.production.yml \
+              up -d --remove-orphans
             docker image prune -f
