@@ -50,7 +50,7 @@ export default function LoginPage() {
   };
 
   return (
-    <AuthLayout subtitle="Manage your belongings with ease">
+    <AuthLayout subtitle="Manage your belongings with easy">
       <div className="auth-card">
         <div className="auth-card-header">
           <h2 className="auth-card-title">Login</h2>
