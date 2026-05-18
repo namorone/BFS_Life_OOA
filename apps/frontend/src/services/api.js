@@ -8,7 +8,10 @@
  */
 import { clearStoredAuth, getStoredAuth } from "../auth/storage";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
+const API_BASE_URL =
+  window.location.port === "3001"
+    ? "http://localhost:8001/api/v1"
+    : import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
 function redirectToLoginAfterAuthFailure() {
   clearStoredAuth();
